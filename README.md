@@ -38,7 +38,7 @@ shoppers’ personalized information.
 5. ECommerce makes use of Hazelcast cache to retireve the data using key shopperId.
 
 **Benefits of Approach 1:**
-1. ECommerce doesn't interact with DB to retrieve the shopper product details in PDS.
+1. ECommerce makes API call to PDS but doesn't interact with DB to retrieve the shopper product details in PDS.
 2. Hazelcast provides IMap which is based on HashMap datastructure optimized for faster retrieval of data using key.
 3. Avoiding a DB call which could be the bottleneck for ECommerce would significantly improve the performance of the API.
 
