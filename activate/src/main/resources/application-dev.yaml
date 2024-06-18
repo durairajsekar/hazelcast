@@ -1,0 +1,40 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /activate  
+    
+logging:
+  level:
+    io.github.resilience4j: TRACE
+
+management.endpoints.web.exposure.include: health,info,metrics,beans,events
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  hazelcast:
+    config: classpath:hazelcast.yaml
+  
+
+
+hazelcast:
+  instance:
+    name: activateCluster
+  network:
+    port:
+      auto-increment: true
+
+
+ 

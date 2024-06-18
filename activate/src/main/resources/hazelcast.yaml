@@ -1,0 +1,22 @@
+hazelcast:
+  cluster-name: dev
+  network:
+    join:
+#      tcp-ip:
+#        enabled: true
+      multicast:
+        enabled: true
+        multicast-group: 224.2.2.3  # Multicast group IP address
+        multicast-port: 20170       # Multicast port number
+#    port:
+#      auto-increment: true
+  properties:
+    hazelcast.logging.type: slf4j
+    
+  map:
+    shopperProduct:
+      near-cache:
+        time-to-live-seconds: 60
+        max-idle-seconds: 20
+        invalidate-on-change: true
+        cache-local-entries: true 

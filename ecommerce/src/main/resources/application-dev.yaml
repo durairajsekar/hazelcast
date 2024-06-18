@@ -1,0 +1,26 @@
+server:
+  port: 8085
+  servlet:
+    context-path: /ecommerce  
+    
+logging:
+  level:
+    io.github.resilience4j: TRACE
+
+management.endpoints.web.exposure.include: health,info,metrics,beans,events
+
+spring:
+  hazelcast:
+    config: classpath:hazelcast.yaml
+  
+
+
+hazelcast:
+  instance:
+    name: dev
+  network:
+    port:
+      auto-increment: true
+
+
+ 
