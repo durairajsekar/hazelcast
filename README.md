@@ -25,7 +25,7 @@ shoppers’ personalized information.
 3. gradle
 4. JDK 17
 
-**Solution Design**
+**Approach 1 Design**
  
 ![NIQ](https://github.com/durairajsekar/hazelcast/assets/147389197/8a653d2d-bfdd-4826-aec7-da1790318289)
 
@@ -41,6 +41,9 @@ shoppers’ personalized information.
 1. ECommerce makes API call to PDS but doesn't interact with DB to retrieve the shopper product details in PDS.
 2. Hazelcast provides IMap which is based on HashMap datastructure optimized for faster retrieval of data using key.
 3. Avoiding a DB call, which could be the bottleneck for ECommerce would significantly improve the performance of the API.
+
+**Approach 2 Design**
+![NIQ_2](https://github.com/durairajsekar/hazelcast/assets/147389197/214079a8-177e-4562-ac31-9fbe418ebd2b)
 
 **Approach 2:** _Personalized Data Service and ECommerce joins Hazelcast cluster to share cache._
 1. **Data Origin**: Data team sends the shopper and product details to Personalized Data Service (PDS).
