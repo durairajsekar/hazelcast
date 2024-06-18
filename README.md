@@ -29,7 +29,14 @@ shoppers’ personalized information.
  
 ![NIQ](https://github.com/durairajsekar/hazelcast/assets/147389197/8a653d2d-bfdd-4826-aec7-da1790318289)
 
+**Approach 1 Premise**: While Ecommerce make API call to external-interface to retrieve the data from PDS, Resource are utilized for three operations. 
+ 1. Making an API call to PDS with request payload.
+ 2. Querying the PDS database with request payload.
+ 3. Transforming the result and filtering using request payload.
 
+If we could optimize on the querying part we would be able to save resource and improve the performance of the API call. In this approach we can make use of hazelcast cache to stored the transformed result while data is stored in PDS, so that data needed for ECommerece would be readily available avoiding the DB query.
+
+    
 **Approach 1:** _Personalized Data Service registers with Hazelcast to store cache._
 1. **Data Origin**: Data team sends the shopper and product details to Personalized Data Service (PDS).
 2. **Data Persitence**: PDS persists the data into Postgres.
@@ -44,6 +51,12 @@ shoppers’ personalized information.
 
 **Approach 2 Design**
 ![NIQ_2](https://github.com/durairajsekar/hazelcast/assets/147389197/214079a8-177e-4562-ac31-9fbe418ebd2b)
+
+**Approach 2 Premise**: While Ecommerce make API call to external-interface to retrieve the data from PDS, Resource are utilized for three operations and in Approach 1 we optimized the DB query and we have two elements to look for optimization 
+ 1. Making an API call to PDS with request payload.
+ 3. Transforming the result and filtering using request payload.
+
+If we could optimize on the API  part we would be able to avoid interacting with PDS thus saving resources of ECommerce and PDS as well.  In this approach we can make use of hazelcast cache cluster to stored the transformed result while data is stored in PDS and share it with ECommerce, so that data needed for ECommerece would be readily available without interacting with PDS.
 
 **Approach 2:** _Personalized Data Service and ECommerce joins Hazelcast cluster to share cache._
 1. **Data Origin**: Data team sends the shopper and product details to Personalized Data Service (PDS).
