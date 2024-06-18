@@ -8,8 +8,12 @@ information and product metadata from our data team and storing it in a specifie
 database.
 2. Interface with eCommerce (external) - Provide fast-reading operation for the
 shoppers’ personalized information.
+![image](https://github.com/durairajsekar/hazelcast/assets/147389197/0b192af7-9413-43ea-80db-5f6bf1ba0059)
 
-**Design**
+**Problem Statement:** eCommerce interface is a real-time interface and requires high performance.
+**Solution Premise:** By making the data needed by eCommerce interface readily available we could improve its performance. We will explore various techniuqe to make the data reaily available and reliabily closer to eCommerce.
+
+**Solution Design**
  
 ![NIQ](https://github.com/durairajsekar/hazelcast/assets/147389197/8a653d2d-bfdd-4826-aec7-da1790318289)
 
