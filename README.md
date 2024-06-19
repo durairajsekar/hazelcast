@@ -70,4 +70,3 @@ If we could optimize on the API  part we would be able to avoid interacting with
 2. We are saving both API call to PDS and DB call to PDS DB.
 3. ECommerce would be able to save resources and become highly available.
 
-
