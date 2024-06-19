@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
-import com.learnings.activate.dto.ProductDTO;
+import com.learnings.activate.dto.ProductResponseDTO;
 
 @RestController
 @RequestMapping("/product")
@@ -23,9 +23,9 @@ public class EcommerceController {
 	HazelcastInstance hazelcastInstance;
 	
 	@GetMapping("/shopper/{shopperId}")
-	public ResponseEntity<List<ProductDTO>> getProductsByShopper(@PathVariable("shopperId") String shopperId) {
+	public ResponseEntity<List<ProductResponseDTO>> getProductsByShopper(@PathVariable("shopperId") String shopperId) {
 		try {
-			IMap<String, List<ProductDTO>> shopperProductMap = hazelcastInstance.getMap("shopperProduct");
+			IMap<String, List<ProductResponseDTO>> shopperProductMap = hazelcastInstance.getMap("shopperProduct");
 			return ResponseEntity.ok(shopperProductMap.get(shopperId)) ;
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

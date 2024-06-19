@@ -1,14 +1,9 @@
 package com.learnings.activate.service;
 
-import java.util.Optional;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.learnings.activate.dto.ProductPageDTO;
 import com.learnings.activate.dto.ProductRequest;
 import com.learnings.activate.dto.ShopperProductRequest;
 import com.learnings.activate.jpa.entity.ProductEntity;

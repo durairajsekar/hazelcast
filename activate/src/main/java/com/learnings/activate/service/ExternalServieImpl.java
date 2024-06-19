@@ -1,7 +1,7 @@
 package com.learnings.activate.service;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -15,6 +15,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.learnings.activate.dto.ProductDTO;
 import com.learnings.activate.dto.ProductPageDTO;
+import com.learnings.activate.dto.ProductResponseDTO;
 import com.learnings.activate.jpa.entity.ProductEntity;
 import com.learnings.activate.jpa.entity.ProductRelevanceEntity;
 import com.learnings.activate.jpa.entity.ShopperProductEntity;
@@ -51,7 +52,7 @@ public class ExternalServieImpl implements ExternalService {
 		var cacheResult = hazelcastCacheUtil.getShopperProductCache(shopperId);
 		if (cacheResult != null) {
 			// Filtering the result for optionalFilters
-			List<ProductDTO> filteredResult = cacheResult.stream()
+			List<ProductResponseDTO> filteredResult = cacheResult.stream()
 					.filter(product -> (ObjectUtils.isEmpty(category) || product.getCategory().equals(category))
 							&& (ObjectUtils.isEmpty(brand) || product.getBrand().equals(brand)))
 					.collect(Collectors.toList());
@@ -84,14 +85,20 @@ public class ExternalServieImpl implements ExternalService {
 	private ProductPageDTO retrieveProductDetailsForFilters(String category, String brand, Pageable pageable,
 			Optional<ShopperProductEntity> shopperProduct) {
 		List<ProductRelevanceEntity> shelf = shopperProduct.get().getShelf();
+		Map<String, Double> productRelevanceMap = shelf.stream()
+                .collect(Collectors.toMap(ProductRelevanceEntity::getProductId, ProductRelevanceEntity::getRelevancyScore));
 		List<String> productIds = shelf.stream().map(ProductRelevanceEntity::getProductId).collect(Collectors.toList());
 
 		Page<ProductEntity> productsPage = productRepository.findAllByProductIdIn(productIds, pageable);
 
-		List<ProductDTO> content = productsPage.getContent().stream()
+		List<ProductResponseDTO> content = productsPage.getContent().stream()
 				.filter(product -> (ObjectUtils.isEmpty(category) || product.getCategory().equals(category))
 						&& (ObjectUtils.isEmpty(brand) || product.getBrand().equals(brand)))
-				.map(product -> activateUtil.convertProductEntityToDTO(product)).collect(Collectors.toList());
+				.map(product -> {
+		            ProductResponseDTO dto = modelMapper.map(product, ProductResponseDTO.class);
+		            dto.setRelevancyScore(productRelevanceMap.get(product.getProductId()));
+		            return dto;
+		        }).collect(Collectors.toList());
 
 		return new ProductPageDTO(content, productsPage.getTotalPages(), productsPage.getTotalElements(),
 				productsPage.getSize(), productsPage.getNumber());

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductPageDTO  implements Serializable{
-	private List<ProductDTO> content;
+	private List<ProductResponseDTO> content;
     private int totalPages;
     private long totalElements;
     private int size;
