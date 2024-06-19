@@ -28,20 +28,21 @@ public class HazelcastCacheUtil {
 	public void updateShopperProductCache(ShopperProductEntity shopperProductEntity) {
 		try {
 			List<ProductRelevanceEntity> shelf = shopperProductEntity.getShelf();
+			// map having productId and relevanceScore for a shopper
 			Map<String, Double> productRelevanceMap = shelf.stream()
 	                .collect(Collectors.toMap(ProductRelevanceEntity::getProductId, ProductRelevanceEntity::getRelevancyScore));
-			
+			// Preparing a list of all product id for a shopper
 			List<String> productIds = shelf.stream().map(ProductRelevanceEntity::getProductId)
 					.collect(Collectors.toList());
-
+			// Fetching other details of the products
 			List<ProductEntity> products = productRepository.findAllByProductIdIn(productIds);
-			
+			// Merging the product details and relevance score and applying the filters
 	        List<ProductResponseDTO> productRelevanceList = products.stream().map(product -> {
 	            ProductResponseDTO dto = modelMapper.map(product, ProductResponseDTO.class);
 	            dto.setRelevancyScore(productRelevanceMap.get(product.getProductId()));
 	            return dto;
 	        }).collect(Collectors.toList());
-	        
+	        // Updating to hazelcast cache
 	        IMap<String, List<ProductResponseDTO>> shopperProductMap = hazelcastInstance.getMap("shopperProduct");
 			shopperProductMap.put(shopperProductEntity.getShopperId(),
 					productRelevanceList);
