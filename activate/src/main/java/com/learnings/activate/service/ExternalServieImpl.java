@@ -48,25 +48,28 @@ public class ExternalServieImpl implements ExternalService {
 
 		// Retrieves from hazelcast cache
 		Pageable pageable = PageRequest.of(page, size);
-		var output = hazelcastCacheUtil.getShopperProductCache(shopperId);
-		if(output!=null) {
-			List<ProductDTO> filteredResult = output.stream()
+		var cacheResult = hazelcastCacheUtil.getShopperProductCache(shopperId);
+		if (cacheResult != null) {
+			// Filtering the result for optionalFilters
+			List<ProductDTO> filteredResult = cacheResult.stream()
 					.filter(product -> (ObjectUtils.isEmpty(category) || product.getCategory().equals(category))
-							&& (ObjectUtils.isEmpty(brand) || product.getBrand().equals(brand))).collect(Collectors.toList());
+							&& (ObjectUtils.isEmpty(brand) || product.getBrand().equals(brand)))
+					.collect(Collectors.toList());
 			ProductPageDTO response = activateUtil.convertListToPageable(filteredResult, pageable);
 			System.out.println(response);
 			if (response != null) {
 				return response;
 			}
 		}
-		
 
-		// Retrieves from DB
+		// If cache is not available for the input, try DB (If cache is not update at
+		// the time of creation of record in DB, first hit would miss hazelcast cache)
 		Optional<ShopperProductEntity> shopperProduct = shopperProductRepository.findById(shopperId);
 
 		if (shopperProduct.isEmpty()) {
 			return null;
 		} else {
+			// Update the cache so second hit would fetch from hazelcast cache
 			hazelcastCacheUtil.updateShopperProductCache(shopperProduct.get());
 		}
 

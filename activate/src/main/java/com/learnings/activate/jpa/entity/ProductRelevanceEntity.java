@@ -9,6 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,7 +32,8 @@ public class ProductRelevanceEntity{
     @Column(name = "RELEVANCY_SCORE")
     private Double relevancyScore;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN) 
     @JoinColumn(name = "SHOPPER_PRODUCT_ID")
     private ShopperProductEntity shopperProduct;
 }
